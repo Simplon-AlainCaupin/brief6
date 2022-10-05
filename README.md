@@ -7,15 +7,26 @@ Création du resource group :
 az group create -l westus -n brief6lain
 ```
 
-Création du cluster AKS :
+Création du cluster AKS contenant 2 nodes :
 ```
 az aks create -g brief6lain -n akslain --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring  --generate-ssh-keys
 ```
 
-Ajout de nodes :
+Config des credentials pour le cli Kubernetes
 
 ```
-az aks nodepool add --resource-group brief6lain --cluster-name akslain --name nodepoolain --node-count 2
+az aks get-credentials --resource-group brief6lain --name akslain
+```
+sortie de la commande :  
+```
+Merged "akslain" as current context in /home/alain/.kube/config
+```
+Vérification :
+```
+alain@alain-VirtualBox:~$ kubectl get nodes
+NAME                                STATUS   ROLES   AGE   VERSION
+aks-nodepool1-14927201-vmss000000   Ready    agent   16m   v1.23.8
+aks-nodepool1-14927201-vmss000001   Ready    agent   15m   v1.23.8
 ```
 
 Création container redis :  
