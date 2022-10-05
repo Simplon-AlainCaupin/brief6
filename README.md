@@ -9,7 +9,13 @@ az group create -l westus -n brief6lain
 
 Création du cluster AKS :
 ```
-az aks create -g brief6lain -n akslain --enable-managed-identity --node-count 1 --enable-addons monitoring --enable-msi-auth-for-monitoring  --generate-ssh-keys
+az aks create -g brief6lain -n akslain --enable-managed-identity --node-count 2 --enable-addons monitoring --enable-msi-auth-for-monitoring  --generate-ssh-keys
+```
+
+Ajout de nodes :
+
+```
+az aks nodepool add --resource-group brief6lain --cluster-name akslain --name nodepoolain --node-count 2
 ```
 
 Création container redis :  
