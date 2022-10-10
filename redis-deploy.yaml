@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rediscontainer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rediscontainer
+  template:
+    metadata:
+      labels:
+        app: rediscontainer
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: rediscontainer
+        image: redis
+        env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        # resources:
+        #   requests:
+        #     cpu: 100m
+        #     memory: 128Mi
+        #   limits:
+        #     cpu: 250m
+        #     memory: 256Mi
+        ports:
+        - containerPort: 6379
+          name: rediscontainer
