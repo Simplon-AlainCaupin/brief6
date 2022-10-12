@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appvote
+  labels:
+    app: appvotetag
+spec:
+  selector:
+    matchLabels:
+      app: appvotetag
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: appvotetag
+    spec:
+      containers:
+      - name: appvote
+        image: whujin11e/public:azure_voting_app
+        ports:
+        - containerPort: 80
+        env:
+        - name: REDIS
+          value: "rediscluster"
+        - name: REDIS_PWD
+          valueFrom:
+            secretKeyRef:
+              name: redis
+              key: REDIS_PWD
+        - name: STRESS_SECS
+          value: "2"
