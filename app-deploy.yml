@@ -20,18 +20,12 @@ spec:
         ports:
         - containerPort: 80
         env:
-        # - name: REDIS
-        #   value: "rediscluster"
+        - name: REDIS
+          value: "rediscluster"
+        - name: REDIS_PWD
+          valueFrom:
+            secretKeyRef:
+              name: redis
+              key: REDIS_PWD
         - name: STRESS_SECS
-          value: "1"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: lbappvote
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-  selector:
-    app: appvotetag
+          value: "2"
