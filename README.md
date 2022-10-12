@@ -41,8 +41,6 @@ sudo docker exec -it redis-brief6 sh
 ```
 Création de manifeste pour le password redis
 
-```
-
 Tout virer :
 kubectl delete -f .
 
