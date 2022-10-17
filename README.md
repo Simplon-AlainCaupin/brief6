@@ -10,7 +10,7 @@ az group create -l westus -n brief6lain
 Suppression du rg :
 
 ```
-az group delete --name brief6lain
+az group delete --name brief6lain --no-wait --yes
 ```
 
 Création du cluster AKS contenant 2 nodes :
@@ -54,36 +54,33 @@ Pour le mot de passe: il faut l'encoder en base64
 
 # partie 2
 
-Création du cluster avec AGIC
-```
-az aks create -n akslain -g brief6lain --network-plugin azure --enable-managed-identity --node-count 4 --generate-ssh-keys
-```
 
-Déploiement application gateway :
+
+Création du resource group :
+
 ```
-az network public-ip create -n publicIpLain -g brief6lain --allocation-method Static --sku Standard
-az network vnet create -n VnetLain -g brief6lain --address-prefix 10.0.0.0/16 --subnet-name subNetLain --subnet-prefix 10.0.0.0/24
-az network application-gateway create -n AppGatewayLain -l westus -g brief6lain --sku Standard_v2 --public-ip-address publicIpLain --vnet-name VnetLain --subnet subNetLain --priority 100
+az group create -l westus -n brief6lain
 ```
 
-Activer AGIC sur le cluster AKS :
+https://learn.microsoft.com/en-us/azure/application-gateway/tutorial-ingress-controller-add-on-new
+
+Création du cluster avec AGIC activé + application gateaway
+
 ```
-$appgwId=$(az network application-gateway show -n AppGatewayLain -g brief6lain -o tsv --query "id")
-az aks enable-addons -n akslain -g brief6lain -a ingress-appgw --appgw-id $appgwId
+az aks create -n akslain -g brief6lain --network-plugin azure --enable-managed-identity --node-count 4 -a ingress-appgw --appgw-name appGWlain --appgw-subnet-cidr "10.225.0.0/16" --generate-ssh-keys
 ```
-Lier le vnet créé à celui du cluster AKS : 
-
-$nodeResourceGroup=$(az aks show -n akslain -g brief6lain -o tsv --query "nodeResourceGroup")
-$aksVnetName=$(az network vnet list -g $nodeResourceGroup -o tsv --query "[0].name")
-
-$aksVnetId=$(az network vnet show -n $aksVnetName -g $nodeResourceGroup -o tsv --query "id")
-az network vnet peering create -n AppGWtoAKSVnetPeering -g brief6lain --vnet-name VnetLain --remote-vnet $aksVnetId --allow-vnet-access
-
-$appGWVnetId=$(az network vnet show -n VnetLain -g brief6lain -o tsv --query "id")
-az network vnet peering create -n AKStoAppGWVnetPeering -g $nodeResourceGroup --vnet-name $aksVnetName --remote-vnet $appGWVnetId --allow-vnet-access
-
 Config des credentials pour le cli Kubernetes
 
 ```
 az aks get-credentials --resource-group brief6lain --name akslain
 ```
+
+Déploiement de l'infra :
+Dans le répertoire contenant les manifestes
+```
+kubectl apply -f .
+```
+
+Stress test :
+kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
+
