@@ -102,16 +102,39 @@ kubectl apply -f .
 Nom de domaine et certificat TLS :  
 
 En utilisant le nom de domaine sur Gandi :  
-![Domaine]()  
+![Domaine](https://github.com/Simplon-AlainCaupin/brief6/blob/main/IMG/gandi_domain.png?raw=true)  
 
 Affectation du DNS :  
-![DNS_gandi]()
+
+![DNS_gandi](https://github.com/Simplon-AlainCaupin/brief6/blob/main/IMG/gandi_dns.png?raw=true)
 
 Création du certificat via l'API Gandi pour certbot, sélection du certificat dans la "rule" créée par la suite,  
 
 Sur le portail Azure, création de Rule redirigeant le back-end de l'application gateway et Listener sur le port https 443 pour la redirection du front-end (le site web de l'application / IP publique front-end de l'app gateway)  
 
+Pour la partie Scaling de l'application :  
 
+Dans le manifeste de l'application [app-deploy](https://github.com/Simplon-AlainCaupin/brief6/blob/main/Part%202/app-deploy.yml) : 
+ajout d'une limite de ressources (sur CPU et MEMORY) et création d'un manifeste pour l'auto-scaling : [scaling.yml](https://github.com/Simplon-AlainCaupin/brief6/blob/main/Part%202/scaling.yml)  
+
+Stress test avec la commande
+```
+seq 100 | parallel --max-args 0  --jobs 10 "curl -k -iF 'vote=Dogs' https://appvote.alain-cpn.space"
+```
 
 # Fonctionnement de Kunernetes, tel que compris :  
 
+Kubernetes est une plateforme d'automatisation open source, permettant de déployer applications et resources depuis des manifestes au format de fichier "yaml", via des containers, égalementdes services Azure dans le cas du brief 6.  
+
+# Difficultés rencontrées :  
+
+Absent car en arrêt maladie lors du brief 5, j'ai pris du retard, j'ai acheté un nom de domaine OVH pour progresser mais rien ne fonctionnait correctement malgrè la documentation suivie à la lettre. 
+Le nom de domaine Gandi a pris quelques jours à être disponible, cela m'a freiné dans la partie 2 du brief mais au final le problème a été résolu et j'ai pu reprendre.  
+
+J'ai choisi de passer par une vm Oracle virtual box (ubuntu 22.04), un incident est apparu vers la fin de la partie 1, ce qui m'a forcé à recommencer depuis un environnement Windows (commandes powershell pour Azure Cli et Kubectl, wsl Ubuntu pour la partie TLS), suite à quoi j'ai pu continuer. J'ai du faire la fin rapidement et sans pouvoir rentrer dans les détails.  
+
+# Points positifs : 
+
+Dans l'ensemble, j'ai compris le fonctionnement de Kubernetes, le brief était très dense mais intéressant, ça a été le plus gros challenge pour moi depuis le début de la formation.  
+
+Mes collègues m'ont épaulé sur mon retard et certains points bloquants, sans quoi je n'aurais pas pu beaucoup avancer jusqu'à la date du rendu.  
