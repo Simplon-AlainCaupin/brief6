@@ -12,12 +12,15 @@ Un cluster Azure au sein d'un Virtual Network comprenant :
 - 1 Application Gateway
 - 1 loadbalancer
 - 1 IP Publique back-end pour l'app gateway
-- I IP Publique front-end pour l'application
+- 1 IP Publique front-end pour l'application
+- Certificat TLS pour l'accès en https à l'application
+- Stockage persistant pour la BDD Redis
+- 1 Scale Set en fonction de la charge CPU
   
 ### Besoins non fonctionnels :  
 
 Niveau sécurité, l'application doit être accessible en https via un certificat TLS vérifié.  
-L'utilisateur de l'application n'a accès qu'au site web via l'adresse fournie.  
+L'utilisateur de l'application n'a accès qu'au site web via l'adresse DNS fournie.  
 
 ## Représentation fonctionnelle :  
 
@@ -29,14 +32,15 @@ Pas de données utilisateur (login, mot de passe inexistants)
 
 ## Représentaton applicative :  
 
-L'application est déployée d'un container depuis un manifeste Kubernetes  
-Il en est de même pour la bdd Redis  
+L'application est déployée d'un container depuis un manifeste Kubernetes,  
+Il en est de même pour la bdd Redis.  
 Le reste de l'infrastructure étant déployé en amont avec le cluster, après création du resource group Azure.  
+D'autres services sont déployés en même temps que les containers, à savoir un stockage persistant pour conserver les données en cas d'incident sur le container BDD, un scale-set pour gérer l'accessibilité à l'application en fonction de la charge CPU sur le container applicatif.  
 
 ## Choix de l'architecture : 
 
 L'architecture cloud est déployée via Azure,  
-Ses composants ont été choisis afin d'assurer la stabilité et la sécurité de l'application déployée (voir Besoins Fonctionnels)
+Ses composants ont été choisis afin d'assurer la stabilité et la sécurité de l'application déployée (voir Besoins Fonctionnels)  
 
 ## Plan de réalisation :  
 
