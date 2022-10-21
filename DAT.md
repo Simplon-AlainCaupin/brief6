@@ -36,6 +36,19 @@ Le reste de l'infrastructure étant déployé en amont avec le cluster, après c
 ## Choix de l'architecture : 
 
 L'architecture cloud est déployée via Azure,  
-Ses composants ont été choisis afin d'assurer la stabilité et la sécurité de l'application déployée, à savoir :  
+Ses composants ont été choisis afin d'assurer la stabilité et la sécurité de l'application déployée (voir Besoins Fonctionnels)
 
+## Plan de réalisation :  
 
+- Côté utilisateur :  
+  - accès au site web en https via un certificat TLS (Gandi)  
+- Côté déploiement :  
+via Kubernetes + deux containers :  
+  - 1 pour Redis et les différents services nécessaires
+  - 1 pour l'application et services  
+- Pour la persistence des données :  
+  - 1 stockage persistent pour la BDD Redis  
+Côté sécurité :  
+  - 1 Kubernetes Secret pour l'accès à la BDD Redis  
+- Stabilité de l'infra :  
+  - Scaleset augmentant les ressources en fonction de l'utilisation CPU

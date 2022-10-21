@@ -1,5 +1,9 @@
 # brief6
 
+Schémas topologiques de l'infra :  
+
+
+
 Simplon brief6 kubernetes
 Création du resource group :
 
@@ -28,10 +32,13 @@ Config des credentials pour le cli Kubernetes
 ```
 az aks get-credentials --resource-group brief6lain --name akslain
 ```
+
 sortie de la commande :  
+
 ```
 Merged "akslain" as current context in /home/alain/.kube/config
 ```
+
 Vérification :
 ```
 alain@alain-VirtualBox:~$ kubectl get nodes
@@ -41,6 +48,7 @@ aks-nodepool1-14927201-vmss000001   Ready    agent   15m   v1.23.8
 ```
 
 Connection redis avec redis-cli
+
 ```
 sudo docker exec -it redis-brief6 sh
 ```
