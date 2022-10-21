@@ -101,7 +101,16 @@ kubectl apply -f .
 
 Nom de domaine et certificat TLS :  
 
-En utilisant le nom de domaine sur Gandi,  
+En utilisant le nom de domaine sur Gandi :  
+![Domaine]()  
+
+Affectation du DNS :  
+![DNS_gandi]()
+
+Création du certificat via l'API Gandi pour certbot, sélection du certificat dans la "rule" créée par la suite,  
+
+Sur le portail Azure, création de Rule redirigeant le back-end de l'application gateway et Listener sur le port https 443 pour la redirection du front-end (le site web de l'application / IP publique front-end de l'app gateway)  
+
 
 
 # Fonctionnement de Kunernetes, tel que compris :  
